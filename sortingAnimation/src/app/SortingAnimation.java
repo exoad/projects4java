@@ -1,27 +1,27 @@
 package app;
 
+/**
+ * This import is static so it could be used without Math.* & also the standard
+ * print
+ */
+import static java.lang.Math.*;
+import static java.lang.System.*;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import javax.swing.event.ChangeListener;
-import javax.swing.JButton;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.BorderLayout;
-import java.awt.Graphics;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.event.ChangeEvent;
-
-import java.util.Arrays;
-
-/** This import is static so it could be used without Math.* & also the standard print */
-import static java.lang.Math.*;
-import static java.lang.System.*;
+import javax.swing.event.ChangeListener;
 
 /**
  * <h1>SortingAnimation</h1>
@@ -33,11 +33,11 @@ import static java.lang.System.*;
  * <li>Selection Sort</li>
  * <li>Insertion Sort</li>
  * </ul>
- * 
+ *
  * JavaDocs is used for easy documentation viewing
  * in IDE's and for JavaDoc generation
  * </p>
- * 
+ *
  * @author Jack Meng
  * @version 1.0
  * @since 2022-02-06
@@ -50,7 +50,7 @@ public class SortingAnimation {
    * <p>
    * Here are the methods that our nested class,
    * where the magic happens, will use.
-   * 
+   *
    * Technically it is just a Runnable {@link java.lang.Runnable}
    * </p>
    */
@@ -65,7 +65,8 @@ public class SortingAnimation {
    */
   public static void main(String[] args) {
     try {
-      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+      UIManager.setLookAndFeel(
+          UIManager.getCrossPlatformLookAndFeelClassName());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -78,23 +79,25 @@ public class SortingAnimation {
    * This nested class will provide the GUI
    * while also providing the sorting algorithms
    * </p>
-   * 
+   *
    * @author Jack Meng
    * @version 1.0
    * @since 2022-02-06
-   * 
+   *
    * @see #SortingAnimation.Magic.bubbleSort()
    * @see #SortingAnimation.Magic.selectionSort()
    * @see #SortingAnimation.Magic.insertionSort()
    * @see #SortingAnimation.Magic.pressuredRunner(Runnable)
    */
-  private static class Magic extends JPanel implements SortingAnimation.Runner, ActionListener, ChangeListener {
+  private static class Magic extends JPanel
+      implements SortingAnimation.Runner, ActionListener, ChangeListener {
     private int[] list;
     private int current, concurrent;
     private long speed = 50;
     private JButton[] buttons = new JButton[5];
     private JSlider speedSlider = new JSlider(1, 200, 50);
-    private javax.swing.JLabel status = new javax.swing.JLabel(), speedLabel = new javax.swing.JLabel();
+    private javax.swing.JLabel status = new javax.swing.JLabel(),
+                               speedLabel = new javax.swing.JLabel();
     private JPanel panel = new JPanel();
     private JFrame frame = new JFrame("Bad Sorting");
     private Thread worker;
@@ -105,7 +108,7 @@ public class SortingAnimation {
      * Our constructor will be called to initialize our components
      * in our GUI, and also generate the proper values for our list
      * </p>
-     * 
+     *
      * @see #SortingAnimation.Magic.generate()
      */
     public Magic() {
@@ -165,13 +168,13 @@ public class SortingAnimation {
      * <p>
      * This method generates random numbers for a primitive array of integers.
      * </p>
-     * 
+     *
      * @return The int[] array with random numbers from 0 to 100
      */
     public int[] generate() {
       int[] temp = new int[SortingAnimation.MAX_ELEMENT];
       for (int i = 0; i < temp.length; i++) {
-        temp[i] = (int) floor(random() * SortingAnimation.MAX_ELEMENT);
+        temp[i] = (int)floor(random() * SortingAnimation.MAX_ELEMENT);
       }
       return temp;
     }
@@ -181,22 +184,22 @@ public class SortingAnimation {
      * This method performs the bubble sort algorithm.
      * Every time it is sorted, it will be redrawn, and
      * the animation will be paused for 100th of a second
-     * 
+     *
      * After it is done, the status JLabel will be updated
-     * 
+     *
      * Our bubbleSort's stats:
      * Time Complexity:
      * Best Case: O(n)
      * Average Case: O(n^2)
      * Worst Case: O(n^2)
      * </p>
-     * 
+     *
      * @throws InterruptedException
      */
     public synchronized void bubbleSort() throws InterruptedException {
       int n = list.length;
       for (int i = 0; i < n - 1; i++) {
-        
+
         for (int j = 0; j < n - i - 1; j++) {
           repaint();
           concurrent = j;
@@ -208,8 +211,8 @@ public class SortingAnimation {
           }
         }
         current = i + 1;
-        
-        //write(list);
+
+        // write(list);
         Thread.sleep(speed);
       }
       status.setForeground(Color.GREEN);
@@ -219,12 +222,12 @@ public class SortingAnimation {
     /**
      * <p>
      * This method performs a bogo sort
-     * 
+     *
      * In general it should NEVER be used for sorting.
      * Why?
      * It just does a random shuffle of the array
      * </p>
-     * 
+     *
      * @throws InterruptedException
      */
     public synchronized void bogoSort() throws InterruptedException {
@@ -236,14 +239,14 @@ public class SortingAnimation {
       Arrays.sort(sorted);
       while (!Arrays.equals(sorted, list)) {
         for (int i = 0; i < n; i++) {
-          int j = (int) floor(random() * n);
+          int j = (int)floor(random() * n);
           int temp = list[i];
           list[i] = list[j];
           list[j] = temp;
           current = i + 1;
           concurrent = j;
           repaint();
-          //write(list);
+          // write(list);
           Thread.sleep(speed);
         }
       }
@@ -256,14 +259,14 @@ public class SortingAnimation {
      * This method performs the selection sort algorithm.
      * Every time it is sorted, it will be redrawn, and
      * the animation will be paused for 100th of a second
-     * 
+     *
      * Our selectionSort's stats:
      * Time Complexity:
      * Best Case: O(n^2)
      * Worst Case: O(n^2)
      * Average Case: O(n^2)
      * </p>
-     * 
+     *
      * @throws InterruptedException
      */
     public synchronized void selectionSort() throws InterruptedException {
@@ -280,9 +283,8 @@ public class SortingAnimation {
         list[mm] = temp;
         current = i + 1;
         repaint();
-        //write(list);
+        // write(list);
         Thread.sleep(speed);
-
       }
       status.setForeground(Color.GREEN);
       status.setText("Sorted.");
@@ -293,14 +295,14 @@ public class SortingAnimation {
      * This method performs the insertion sort algorithm.
      * Every time it is sorted, it will be redrawn, and
      * the animation will be paused for 100th of a second
-     * 
+     *
      * Our insertionSort's stats:
      * Time Complexity:
      * Best Case: O(n)
      * Average Case: O(n^2)
      * Worst Case: O(n^2)
      * </p>
-     * 
+     *
      * @throws InterruptedException
      */
     public synchronized void insertionSort() throws InterruptedException {
@@ -315,7 +317,7 @@ public class SortingAnimation {
         list[k + 1] = curr;
         current = i;
         repaint();
-        //write(list);
+        // write(list);
         Thread.sleep(speed);
       }
       status.setForeground(Color.GREEN);
@@ -325,19 +327,19 @@ public class SortingAnimation {
     /**
      * <p>
      * This method is overridden.
-     * 
+     *
      * It will attempt to redraw the most current
      * state of the array as lines on the screen.
-     * 
+     *
      * This will also make a temporary cursor and flag
      * for the current element being sorted.
-     * 
+     *
      * Cursor Colors:
      * Orange: Current Element
      * Black: Default
      * Blue: Finding Element
      * </p>
-     * 
+     *
      * @param g This is the graphics object that will be used to draw the array
      */
     @Override
@@ -350,7 +352,7 @@ public class SortingAnimation {
           g.setColor(Color.ORANGE);
           g.drawLine(j, 400 - list[i], j, 600);
           g.setColor(Color.BLACK);
-        }else if (i == concurrent) {
+        } else if (i == concurrent) {
           g.setColor(Color.BLUE);
           g.drawLine(j, 400 - list[i], j, 600);
           g.setColor(Color.BLACK);
@@ -361,10 +363,10 @@ public class SortingAnimation {
     /**
      * <p>
      * This method is overridden.
-     * 
+     *
      * It is used to run the current GUI
      * </p>
-     * 
+     *
      * @see java.lang.Runnable#run()
      */
     @Override
@@ -377,33 +379,32 @@ public class SortingAnimation {
     public void write(int[] list) {
       for (int e : list)
         System.out.print(e + " ");
-      out.print("\n========================================================\n\n\n");
+      out.print(
+          "\n========================================================\n\n\n");
     }
 
     /**
      * <p>
      * This method is a macro function, meaning it is used to make my life
      * easier when writing the code.
-     * 
+     *
      * A thread is ran because this allows our GUI to not "broken" or
      * frozen when our algorithm is running. This also allows us to switch
      * from algorithm to algorithm without having to restart the program or wait
      * until it is done.
-     * 
+     *
      * Since the algorithm only contains 100 integers, it will not use a lot of
      * memory, so leaving them in a thread is not a problem.
-     * 
+     *
      * It will run the parameter as a callback. (Java bad no Function pointers)
      * </p>
-     * 
+     *
      * @param func The callback to be run
      * @throws InterruptedException
      * @see #run()
      */
     private void pressuredRunner(Runnable func) throws InterruptedException {
-      worker = new Thread(() -> {
-        func.run();
-      });
+      worker = new Thread(() -> { func.run(); });
       Thread.sleep(2);
       worker.start();
     }
@@ -411,21 +412,21 @@ public class SortingAnimation {
     /**
      * <p>
      * This method is overridden
-     * 
+     *
      * This method acts as an actionListener for the JButtons in the GUI.
-     * 
+     *
      * When the user clicks on a button, it will run the corresponding algorithm
      * inside a new thread {@link #pressuredRunner(Runnable)}
-     * 
+     *
      * This action allows us to run multiple algorithms at once or at least
      * make sure the program doesn't freeze when running the algorithms.
-     * 
+     *
      * Every time a button is pressed, the status JLabel will be updated
      * so the user can a see what the program is doing.
      * </p>
-     * 
+     *
      * @param e The action event that is triggered
-     * 
+     *
      * @see #SortingAnimation.Magic.pressuredRunner(Runnable)
      */
     @Override
@@ -449,11 +450,9 @@ public class SortingAnimation {
             try {
               bubbleSort();
             } catch (InterruptedException e1) {
-
             }
           });
         } catch (InterruptedException e1) {
-
         }
       } else if (e.getSource().equals(buttons[1])) {
         list = generate();
@@ -465,11 +464,9 @@ public class SortingAnimation {
             try {
               selectionSort();
             } catch (InterruptedException e1) {
-
             }
           });
         } catch (InterruptedException e1) {
-
         }
       } else if (e.getSource().equals(buttons[2])) {
         list = generate();
@@ -481,11 +478,9 @@ public class SortingAnimation {
             try {
               insertionSort();
             } catch (InterruptedException e1) {
-
             }
           });
         } catch (InterruptedException e1) {
-
         }
       } else if (e.getSource().equals(buttons[3])) {
         list = generate();
@@ -497,11 +492,9 @@ public class SortingAnimation {
             try {
               bogoSort();
             } catch (InterruptedException e1) {
-
             }
           });
         } catch (InterruptedException e1) {
-
         }
       } else if (e.getSource().equals(buttons[4])) {
         if (worker != null) {
@@ -515,12 +508,12 @@ public class SortingAnimation {
     /**
      * <p>
      * This method is overriden
-     * 
+     *
      * It is used to update the speed
      * of the animation based on the
      * slider's position
      * </p>
-     * 
+     *
      * @see #ChangeListener.stateChanged(ChangeEvent)
      */
     @Override
